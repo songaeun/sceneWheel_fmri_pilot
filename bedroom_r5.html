@@ -53,8 +53,6 @@
 
     const jsPsych = initJsPsych();
 
-    // ** subject id ** //
-    var sbjID = firebase.auth().currentUser.uid;      
     
     // ** image preload ** //
     const preload_inst = {
@@ -334,8 +332,9 @@
     // ** debrief ** //
     var debrief_page = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: function(){                            
-            var html = 
+        stimulus: function(){ 
+            var sbjID = firebase.auth().currentUser.uid;                           
+            var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
             'Your participation confirmation code is:'+sbjID+' </br>' +
             'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
