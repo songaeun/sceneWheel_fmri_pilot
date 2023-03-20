@@ -336,16 +336,13 @@
         stimulus: function(){                    
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is:'+jsPsych.data.get().last(1).values()[0].sbjID+' </br>' +
-            'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
+            'Your participation confirmation code is: <u>'+jsPsych.data.get().last(1).values()[0].sbjID+'</u> </br>' +
+            '<b> Please send this code to the researcher via email. </b> </p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
         },
         choices: "NO_KEYS",        
         data: {disp_type: 'debrief_page'},
-        on_start: function(){  
-            var sbjID = firebase.auth().currentUser.uid;        
-        }       
     }
 
     timeline=[]  
