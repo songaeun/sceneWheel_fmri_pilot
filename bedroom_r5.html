@@ -353,6 +353,19 @@
       }           
     }
 
+    // ** consent ** //
+    var consent = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(){                    
+            var html =             
+            '<p area-selected="font-size:15px;"> Please read the consent form and click agree to start. </br></br> '+                        
+            '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
+            return html;
+        },
+        choices: "Agree",        
+    }
+      
+
     // ** debrief ** //
     var debrief_page = {
         type: jsPsychHtmlKeyboardResponse,
@@ -369,6 +382,7 @@
     }
 
     timeline=[]  
+    timeline.push(consent)
     timeline.push(demographic_page)
     timeline.push(preload_inst)
     timeline.push(preload_image)
