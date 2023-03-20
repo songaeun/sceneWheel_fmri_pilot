@@ -70,11 +70,22 @@
         images.push(wheel_path+("000000"+i).slice(-6)+".webp")
     }    
     images.push(wheel_path+"999999.webp")
-    const preload_image = {
+    const preload_image_main = {
         type: jsPsychPreload, 
         images: images,
-        data: {disp_type: 'preload_image'}
+        data: {disp_type: 'preload_main_image'}
     }
+    var prac_images = []    
+    for (var i=0; i<360; i++){
+        prac_images.push(prac_path+("000000"+i).slice(-6)+".webp")
+    }    
+    prac_images.push(prac_path+"999999.webp")
+    const preload_image_prac = {
+        type: jsPsychPreload, 
+        images: prac_images,
+        data: {disp_type: 'preload_prac_image'}
+    }
+
 
     // ** instruction ** //
 
@@ -403,12 +414,13 @@
     });
     timeline.push(consent)
     timeline.push(demographic_page)
-    timeline.push(preload_inst)
-    timeline.push(preload_image)
+    timeline.push(preload_inst)    
     timeline.push(inst_welcome)
     timeline.push(inst_prelearn)
-    timeline.push(recon_practice)
+    timeline.push(preload_image_prac)
+    timeline.push(recon_practice)    
     timeline.push(inst_prac2main_recon)
+    timeline.push(preload_image_main)
     // timeline.push(prelearn1)
     // timeline.push(recon_break1)
     // timeline.push(prelearn2)
