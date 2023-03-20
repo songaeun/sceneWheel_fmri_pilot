@@ -153,8 +153,8 @@ var jsPsychReconstruct_wheel = (function (jspsych) {
       let display_html;
       display_html=`<div id="base_container">${canvas_html}${answer_html}</div>`
       this.display.innerHTML=display_html;
-      this.recon_arena=this.display.querySelector('#recon_canvas');        
-      // indicator 
+      this.recon_arena=this.display.querySelector('#recon_canvas');
+      // indicator
       if(this.params.show_indicator==true){        
         var rect = this.recon_arena.getBoundingClientRect();
         var rel_cx = (rect.width/2)-this.params.indicator_wheel_width; //relative canvas center
