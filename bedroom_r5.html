@@ -54,11 +54,7 @@
     const jsPsych = initJsPsych();
 
     // ** subject id ** //
-    var sbjID = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for(var i=0; i < 5; i++){
-        sbjID += possible.charAt(Math.floor(Math.random() * possible.length));
-    };    
+    var sbjID = firebase.auth().currentUser.uid;      
     
     // ** image preload ** //
     const preload_inst = {
@@ -334,14 +330,14 @@
         });                          
       }           
     }
-    
+
     // ** debrief ** //
     var debrief_page = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: function(){                            
             var html = 
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is:'+firebase.auth().currentUser.uid+' </br>' +
+            'Your participation confirmation code is:'+sbjID+' </br>' +
             'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
