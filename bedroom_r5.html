@@ -333,8 +333,7 @@
     // ** debrief ** //
     var debrief_page = {
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: function(){ 
-            var sbjID = firebase.auth().currentUser.uid;                           
+        stimulus: function(){                    
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
             'Your participation confirmation code is:'+jsPsych.data.get().last(1).values()[0].sbjID+' </br>' +
