@@ -322,9 +322,9 @@
         tmp = window.crypto.getRandomValues(tmp)
         var dbpath = firebase.auth().currentUser.uid+'/'+tmp;
         firebase.database().ref(dbpath).set({                          
-        data: JSON.parse( JSON.stringify( jsPsych.data.get().values() ) ),                            
-        interaction_data:JSON.parse( JSON.stringify( jsPsych.data.getInteractionData().values() ) ),
-        date: Date()
+            data: JSON.parse( JSON.stringify( jsPsych.data.get().values() ) ),                            
+            interaction_data: JSON.parse( JSON.stringify( jsPsych.data.getInteractionData().values() ) ),
+            date: Date()
         });                          
       }           
     }
@@ -342,7 +342,10 @@
             return html;
         },
         choices: "NO_KEYS",        
-        data: {disp_type: 'debrief_page'}            
+        data: {disp_type: 'debrief_page'},
+        on_start: function(){  
+            var sbjID = firebase.auth().currentUser.uid;        
+        }       
     }
 
     timeline=[]  
