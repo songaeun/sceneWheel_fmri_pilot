@@ -43,7 +43,7 @@
     // ** EXP parameters ** //
     var wheels = ['bedroom', 'livingroom', 'diningroom']
     var wheel_path = 'stimuli/'+wheels[0]+'/'
-    var prac_path =  'stimuli/'+wheels[_.sample([1,2])]
+    var prac_path =  'stimuli/'+wheels[_.sample([1,2])]+'/'
     var learn_img = _.range(0,360,10)
     var recon_img = _.range(0,360,30)
     var boundary_start = _.sample(recon_img) 
@@ -58,9 +58,7 @@
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     for(var i=0; i < 5; i++){
         sbjID += possible.charAt(Math.floor(Math.random() * possible.length));
-    };
-
-    
+    };    
     
     // ** image preload ** //
     const preload_inst = {
@@ -100,13 +98,13 @@
     const inst_learn = {
         type: jsPsychImageButtonResponse,
         stimulus: 'stimuli/instruction/p3_learn.jpg',
-        choices: ["Start"],
+        choices: ["Next"],
         data: {disp_type: 'inst_learn'}
     }
     const inst_postlearn = {
         type: jsPsychImageButtonResponse,
         stimulus: 'stimuli/instruction/p4_postlearn.jpg',
-        choices: ["Start"],
+        choices: ["Next"],
         data: {disp_type: 'inst_postlearn'}
     }
 
@@ -174,11 +172,11 @@
     const recon_practice = {
         timeline: [fixation, recon_target, blank, reconstruction],
         timeline_variables: [
-            {image_num: 0, image_name: wheel_path+"000000.webp", category: ".", repetition: "1"},
-            {image_num: 72, image_name: wheel_path+"000072.webp", category: ".", repetition: "1"},
-            {image_num: 144, image_name: wheel_path+"000144.webp", category: ".", repetition: "1"},
-            {image_num: 216, image_name: wheel_path+"000216.webp", category: ".", repetition: "1"},
-            {image_num: 288, image_name: wheel_path+"000288.webp", category: ".", repetition: "1"}
+            {image_num: 0, image_name: pract_path+"000000.webp", category: ".", repetition: "1"},
+            {image_num: 72, image_name: pract_path+"000072.webp", category: ".", repetition: "1"},
+            {image_num: 144, image_name: pract_path+"000144.webp", category: ".", repetition: "1"},
+            {image_num: 216, image_name: pract_path+"000216.webp", category: ".", repetition: "1"},
+            {image_num: 288, image_name: pract_path+"000288.webp", category: ".", repetition: "1"}
         ],
         randomize_order: true
     }
