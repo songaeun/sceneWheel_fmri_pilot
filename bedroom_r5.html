@@ -399,7 +399,7 @@
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
             'Your participation confirmation code is: <u>'+jsPsych.data.get().last(1).values()[0].sbjID+'</u> </br>' +
-            '<b> Please send this code to the researcher via email. </b> </p>'+                          
+            '<b> Please copy and paste this code, and sent it to the researcher via email. </b> </p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
         },
@@ -423,7 +423,7 @@
     timeline.push(recon_practice)    
     timeline.push(inst_prac2main_recon)
     timeline.push(preload_image_main)
-    // timeline.push(prelearn1)
+    timeline.push(prelearn1)
     timeline.push(recon_break1)
     // timeline.push(prelearn2)
     timeline.push(recon_break2)
