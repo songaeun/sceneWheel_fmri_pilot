@@ -47,8 +47,8 @@
     var learn_img = _.range(0,360,10)
     var recon_img = _.range(0,360,30)
     var boundary_start = _.sample(recon_img) 
-    var n_learn = 1
-    var n_recon = 2 // should be an even number
+    var n_learn = 5
+    var n_recon = 8 // should be an even number
     var condition = make_condition(learn_img, recon_img, boundary_start, n_learn, n_recon, wheel_path, ".webp")
 
     const jsPsych = initJsPsych();
@@ -184,11 +184,16 @@
     // ** learn ** //
     const learn_target = {
         type: jsPsychImageKeyboardResponse,
-        stimulus: wheel_path+jsPsych.timelineVariable('img_path'),
+        stimulus: wheel_path+jsPsych.timelineVariable('image_name'),
         choices: ['e', 'i'],
         prompt: "<p>Is this room category A or B? Press 'e' for A and 'i' for B.</p>",
         trial_duration: 2000,
-        data: {disp_type: 'learn_target'},
+        data: {
+            disp_type: 'learn_target',
+            image_num: jsPsych.timelineVariable('image_num'),
+            round: jsPsych.timelineVariable('round'),
+            category: jsPsych.timelineVariable('category')
+        },
         on_finish: function(data){
             if(jsPsych.timelineVariable('category')=="A"){
                 var correct_key = "e"
@@ -249,6 +254,24 @@
                 data: {disp_type: 'learn_break'}
             }
         }                       
+    }
+
+    var learn_practice = {
+        timeline: [learn_target, feedback],
+        timeline_variables: [
+            {image_num: 0, image_name: prac_path+"000000.webp", category: "A", round: "prac"},
+            {image_num: 72, image_name: prac_path+"000072.webp", category: "A", round: "prac"},
+            {image_num: 144, image_name: prac_path+"000144.webp", category: "B", round: "prac"},
+            {image_num: 216, image_name: prac_path+"000216.webp", category: "B", round: "prac"},
+            {image_num: 288, image_name: prac_path+"000288.webp", category: "B", round: "prac"}
+        ],
+        randomize_order: true
+    }
+    var inst_prac2main_learn = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: "<p>Practice session is done. Now move on to the main session.</p>",
+        choices: ['start'],
+        data: {disp_type: 'inst_prac2main_learn'}
     }
 
     // ** post-learn ** //
@@ -346,14 +369,14 @@
     }
 
     timeline=[]  
-    // timeline.push(demographic_page)
-    // timeline.push(preload_inst)
-    // timeline.push(preload_image)
-    // timeline.push(inst_welcome)
-    // timeline.push(inst_prelearn)
-    // timeline.push(recon_practice)
-    // timeline.push(inst_prac2main_recon)
-    // timeline.push(prelearn1)
+    timeline.push(demographic_page)
+    timeline.push(preload_inst)
+    timeline.push(preload_image)
+    timeline.push(inst_welcome)
+    timeline.push(inst_prelearn)
+    timeline.push(recon_practice)
+    timeline.push(inst_prac2main_recon)
+    timeline.push(prelearn1)
     // timeline.push(prelearn2)
     // timeline.push(prelearn3)
     // timeline.push(prelearn4)
@@ -361,14 +384,16 @@
     // timeline.push(prelearn6)
     // timeline.push(prelearn7)
     // timeline.push(prelearn8)
-    // timeline.push(inst_learn)
-    // timeline.push(learn1)
+    timeline.push(inst_learn)
+    timeline.push(learn_practice)
+    timeline.push(inst_prac2main_learn)
+    timeline.push(learn1)
     // timeline.push(learn2)
     // timeline.push(learn3)
     // timeline.push(learn4)
     // timeline.push(learn5)
-    // timeline.push(inst_postlearn)
-    // timeline.push(postlearn1)
+    timeline.push(inst_postlearn)
+    timeline.push(postlearn1)
     // timeline.push(postlearn2)
     // timeline.push(postlearn3)
     // timeline.push(postlearn4)
