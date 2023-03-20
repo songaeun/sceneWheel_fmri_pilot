@@ -168,7 +168,7 @@
         } else {
             this['recon_break'+(r+1)] = {                
                 type: jsPsychHtmlButtonResponse,
-                stimulus: '<div style="font-size:20px;">This is the end of Block'+(r+1)+'.</br>'+
+                stimulus: '<div style="font-size:20px;">This is the end of the current task session.</br>'+
                 'Take a break and press the button to proceed.</br></br></div>',             
                 choices: ['next'],
                 data: {disp_type: 'recon_break'}
@@ -255,7 +255,7 @@
     for(r=0; r<n_learn; r++){
         this['learn'+(r+1)] = {
             timeline: [learn_target, feedback],
-            timeline_variables: condition.learn['r'+(r+1)],
+            timeline_variables: condition.learn[r],
             randomize_order: true
         }
     }
@@ -272,7 +272,7 @@
         } else {
             this['learn_break'+(r+1)] = {                
                 type: jsPsychHtmlButtonResponse,
-                stimulus: '<div style="font-size:20px;">This is the end of round'+(r+1)+'.</br>'+
+                stimulus: '<div style="font-size:20px;">This is the end of the current session+.</br>'+
                 'Take a break and press the button to move on to the next session.</br></br></div>',                    
                 choices: ['next'],
                 data: {disp_type: 'learn_break'}
@@ -353,6 +353,17 @@
             disp_type: 'demographic_info'
         }
     }
+    // ** consent ** //
+    var consent = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(){                    
+            var html =             
+            '<p area-selected="font-size:15px;"> Please read the consent form and click agree to start. </br></br> '+                        
+            '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
+            return html;
+        },
+        choices: ["Agree"],        
+    }      
 
     var save_data = {
       type: jsPsychHtmlKeyboardResponse,
@@ -375,20 +386,7 @@
         });   
         data.sbjID = firebase.auth().currentUser.uid;                  
       }           
-    }
-
-    // ** consent ** //
-    var consent = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: function(){                    
-            var html =             
-            '<p area-selected="font-size:15px;"> Please read the consent form and click agree to start. </br></br> '+                        
-            '<embed src="stimuli/consent_online_credit.pdf" style="width:80vw; height:70vh;"></embed>'
-            return html;
-        },
-        choices: ["Agree"],        
-    }
-      
+    }    
 
     // ** debrief ** //
     var debrief_page = {
@@ -396,7 +394,7 @@
         stimulus: function(){                    
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is: <u>'+jsPsych.data.get().last(1).values()[0].sbjID+'</u> </br>' +
+            'Your participation confirmation code is: <u>'+jsPsych.data.get().last(2).values()[0].sbjID+'</u> </br>' +
             '<b> Please send this code to the researcher via email. </b> </p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
@@ -406,58 +404,58 @@
     }
 
     timeline=[]  
-    timeline.push({
-        type: jsPsychFullscreen,
-        fullscreen_mode: true,
-        delay_after: 0,
-        data: {disp_type: 'fullscreen-in'}
-    });
+    // timeline.push({
+    //     type: jsPsychFullscreen,
+    //     fullscreen_mode: true,
+    //     delay_after: 0,
+    //     data: {disp_type: 'fullscreen-in'}
+    // });
     timeline.push(consent)
     timeline.push(demographic_page)
     timeline.push(preload_inst) 
     timeline.push(inst_welcome)
     timeline.push(inst_prelearn)
-    // timeline.push(preload_image_prac)
-    // timeline.push(recon_practice)    
-    // timeline.push(inst_prac2main_recon)
+    timeline.push(preload_image_prac)
+    timeline.push(recon_practice)    
+    timeline.push(inst_prac2main_recon)
     timeline.push(preload_image_main)
     // timeline.push(prelearn1)
-    // timeline.push(recon_break1)
+    timeline.push(recon_break1)
     // timeline.push(prelearn2)
-    // timeline.push(recon_break2)
+    timeline.push(recon_break2)
     // timeline.push(prelearn3)
-    // timeline.push(recon_break3)
-    timeline.push(prelearn4)   
+    timeline.push(recon_break3)
+    // timeline.push(prelearn4)   
     timeline.push(recon_break4)
     timeline.push(inst_learn)
     timeline.push(learn_practice)
     timeline.push(inst_prac2main_learn)
     // timeline.push(learn1)
-    // timeline.push(learn_break1)
+    timeline.push(learn_break1)
     // timeline.push(learn2)
-    // timeline.push(learn_break2)
+    timeline.push(learn_break2)
     // timeline.push(learn3)
-    // timeline.push(learn_break3)
+    timeline.push(learn_break3)
     // timeline.push(learn4)
-    // timeline.push(learn_break4)
+    timeline.push(learn_break4)
     timeline.push(learn5)
     timeline.push(learn_break5)
     timeline.push(inst_postlearn)
     // timeline.push(postlearn1)
     timeline.push(recon_break1)
     // timeline.push(postlearn2)
-    // timeline.push(recon_break2)
+    timeline.push(recon_break2)
     // timeline.push(postlearn3)
-    // timeline.push(recon_break3)
+    timeline.push(recon_break3)
     // timeline.push(postlearn4)
-    // timeline.push(recon_break4)
-    timeline.push(save_data)
+    timeline.push(recon_break4)
     timeline.push({
         type: jsPsychFullscreen,
         fullscreen_mode: false,
         delay_after: 0,
         data: {disp_type: 'fullscreen-out'}
     });
+    timeline.push(save_data)    
     timeline.push(debrief_page)
     
     jsPsych.run(timeline)
