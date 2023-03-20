@@ -264,22 +264,7 @@
             timeline_variables: condition.postlearn[r],
             randomize_order: true
         }
-    }
-
-    // ** debrief ** //
-    var debrief_page = {
-        type: jsPsychHtmlKeyboardResponse,
-        stimulus: function(){                            
-            var html = 
-            '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is:'+firebase.auth().currentUser.uid+' </br>' +
-            'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
-            '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
-            return html;
-        },
-        choices: "NO_KEYS",        
-        data: {disp_type: 'debrief_page'}            
-    }
+    }    
 
     // ** demographic page ** //
     var gender_options = ['Male', 'Female', 'Other'];
@@ -348,6 +333,21 @@
         date: Date()
         });                          
       }           
+    }
+    
+    // ** debrief ** //
+    var debrief_page = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: function(){                            
+            var html = 
+            '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
+            'Your participation confirmation code is:'+firebase.auth().currentUser.uid+' </br>' +
+            'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
+            '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
+            return html;
+        },
+        choices: "NO_KEYS",        
+        data: {disp_type: 'debrief_page'}            
     }
 
     timeline=[]  
