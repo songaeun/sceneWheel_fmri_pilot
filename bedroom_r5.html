@@ -315,7 +315,7 @@
       data: { // random rotation angle saving                
           disp_type: 'saving_display'
       },            
-      on_finish: function(){  
+      on_finish: function(data){  
         // jsPsych.data.displayData() 
         // send data to firebase!                                 
         var tmp = new Uint32Array(1);
