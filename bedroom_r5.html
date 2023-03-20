@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sceneWheel</title>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
+    <script src="https://unpkg.com/jspsych@7.3.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-image-button-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.2"></script>    
+    <script src="make_condition.js"></script>
+    <script src="plugin-reconstruct-wheel.js"></script>
+    <link href="https://unpkg.com/jspsych@7.3.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-database.js"></script>  
+  </head>
+  <body></body>
+  <script type="text/javascript">
+    // Firebase set up
+    const firebaseConfig = {
+        apiKey: "AIzaSyC8FNSU84Ou78gEwaqZ4F0TlFleytiiz9c",
+        authDomain: "scenewheel-fmri-behavpilot.firebaseapp.com",
+        projectId: "scenewheel-fmri-behavpilot",
+        storageBucket: "scenewheel-fmri-behavpilot.appspot.com",
+        messagingSenderId: "488348625273",
+        appId: "1:488348625273:web:4ac565884b53f6a80727a8"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // login anonymous user
+    firebase.auth().signInAnonymously().catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+    });      
+  </script> 
+
+  <script>
+
+    // ** EXP parameters ** //
+    var wheels = ['bedroom', 'livingroom', 'diningroom']
+    var wheel_path = 'stimuli/'+wheels[0]+'/'
+    var prac_path =  'stimuli/'+wheels[_.sample([1,2])]
+    var learn_img = _.range(0,360,10)
+    var recon_img = _.range(0,360,30)
+    var boundary_start = _.sample(recon_img) 
+    var n_learn = 1
+    var n_recon = 2 // should be an even number
+    var condition = make_condition(learn_img, recon_img, boundary_start, n_learn, n_recon, wheel_path, ".webp")
+
+    const jsPsych = initJsPsych();
+
+    // ** subject id ** //
+    var sbjID = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for(var i=0; i < 5; i++){
+        sbjID += possible.charAt(Math.floor(Math.random() * possible.length));
+    };
+
+    
+    
+    // ** image preload ** //
+    const preload_inst = {
+        type: jsPsychPreload,
+        images: ['stimuli/instruction/p1_welcome.jpg', 
+        'stimuli/instruction/p2_prelearn.jpg',
+        'stimuli/instruction/p3_learn.jpg', 
+        'stimuli/instruction/p4_postlearn.jpg'],
+        data: {disp_type: 'preload_inst'}
+    }
+
+    var images = []    
+    for (var i=0; i<360; i++){
+        images.push(wheel_path+("000000"+i).slice(-6)+".webp")
+    }    
+    images.push(wheel_path+"999999.webp")
+    const preload_image = {
+        type: jsPsychPreload, 
+        images: images,
+        data: {disp_type: 'preload_image'}
+    }
+
+    // ** instruction ** //
+
+    const inst_welcome = {
+      type: jsPsychImageButtonResponse,
+      stimulus: 'stimuli/instruction/p1_welcome.jpg',
+      choices: ["Next"],
+      data: {disp_type: 'inst_welcom'}
+    }
+    const inst_prelearn = {
+        type: jsPsychImageButtonResponse,
+        stimulus: 'stimuli/instruction/p2_prelearn.jpg',
+        choices: ["Next"],
+        data: {disp_type: 'inst_prelearn'}
+    }
+    const inst_learn = {
+        type: jsPsychImageButtonResponse,
+        stimulus: 'stimuli/instruction/p3_learn.jpg',
+        choices: ["Start"],
+        data: {disp_type: 'inst_learn'}
+    }
+    const inst_postlearn = {
+        type: jsPsychImageButtonResponse,
+        stimulus: 'stimuli/instruction/p4_postlearn.jpg',
+        choices: ["Start"],
+        data: {disp_type: 'inst_postlearn'}
+    }
+
+    // ** prelearn ** //
+    const fixation = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: '<p style="font-size: 48px;">+</p>',
+        choices: "NO_KEYS",
+        trial_duration: 1000,
+        data: {disp_type: 'fixation'}
+    }
+    const blank = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: ' ',
+        choices: "NO_KEYS",
+        trial_duration: 1000,
+        data: {disp_type: 'blank'}
+    }
+    const recon_target = {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: jsPsych.timelineVariable('image_name'),
+        choices: "NO_KEYS",
+        trial_duration: 200,        
+        data: {disp_type: 'recon_target'}        
+    }
+    const reconstruction = {
+        type: jsPsychReconstruct_wheel,
+        image_path: wheel_path,
+        random_circle_rotation: true,
+        image_format: 'webp',
+        data: {
+            disp_type: 'reconstruction', 
+            answer: jsPsych.timelineVariable('image_num'),
+            category: jsPsych.timelineVariable('category'),
+            repetition: jsPsych.timelineVariable('repetition')
+        }
+    }
+    for(r=0; r<n_recon; r++){
+        this['prelearn'+(r+1)] = {
+            timeline: [fixation, recon_target, blank, reconstruction],
+            timeline_variables: condition.prelearn[r],
+            randomize_order: true
+        }
+    }
+    for(r=0; r<n_recon; r++){     
+        if(r!=(n_recon-1)){
+            this['recon_break'+(r+1)] = {                
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="font-size:20px;">This is the end of Block '+(r+1)+'.</br>'+
+                    'You have '+(n_recon-r-1)+' more block(s) to go.</br>'+
+                    'Take a break and press the button to proceed.</br></br></div>',               
+                choices: ['start'],
+                data: {disp_type: 'recon_break'}
+            }
+        } else {
+            this['recon_break'+(r+1)] = {                
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="font-size:20px;">This is the end of Block'+(r+1)+'.</br>'+
+                'Take a break and press the button to proceed.</br></br></div>',             
+                choices: ['next'],
+                data: {disp_type: 'recon_break'}
+            }
+        }                       
+    }
+    const recon_practice = {
+        timeline: [fixation, recon_target, blank, reconstruction],
+        timeline_variables: [
+            {image_num: 0, image_name: wheel_path+"000000.webp", category: ".", repetition: "1"},
+            {image_num: 72, image_name: wheel_path+"000072.webp", category: ".", repetition: "1"},
+            {image_num: 144, image_name: wheel_path+"000144.webp", category: ".", repetition: "1"},
+            {image_num: 216, image_name: wheel_path+"000216.webp", category: ".", repetition: "1"},
+            {image_num: 288, image_name: wheel_path+"000288.webp", category: ".", repetition: "1"}
+        ],
+        randomize_order: true
+    }
+    const inst_prac2main_recon = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: "<p>Practice session is done. Now move on to the main session.</p>",
+        choices: ['start'],
+        data: {disp_type: 'inst_prac2main_recon'}
+    }
+
+    // ** learn ** //
+    const learn_target = {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: wheel_path+jsPsych.timelineVariable('img_path'),
+        choices: ['e', 'i'],
+        prompt: "<p>Is this room category A or B? Press 'e' for A and 'i' for B.</p>",
+        trial_duration: 2000,
+        data: {disp_type: 'learn_target'},
+        on_finish: function(data){
+            if(jsPsych.timelineVariable('category')=="A"){
+                var correct_key = "e"
+            }else if(jsPsych.timelineVariable('category')=="B"){
+                var correct_key = "i"
+            }              
+            if(data.response == null){
+                data.correct = 'late';
+            } else {
+                if(jsPsych.pluginAPI.compareKeys(data.response, correct_key)){
+                    data.correct = 'correct';
+                } else {
+                    data.correct = 'wrong';
+                }
+            }   
+        }       
+    }
+    const feedback = {
+        type: jsPsychHtmlKeyboardResponse, 
+        stimulus: function(){
+            var last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;  
+            if(last_trial_correct == 'correct') {
+                var fb = '<p><mark style="color:green; background:none; font-size:30pt;">Correct!</mark></br></p>'         
+            } else if(last_trial_correct == 'wrong'){
+                var fb = '<p><mark style="color:red; background:none; font-size:30pt;">Wrong...</mark></br></p>'
+            } else if(last_trial_correct == 'late'){
+                var fb = '<p><mark style="color:brown; background:none; font-size:30pt;">Too slow</mark></p>'
+            }
+            return fb
+        },
+        trial_duration: 1000,
+        choices: "NO_KEYS",
+        data: {disp_type: "feedback"}
+    }
+    for(r=0; r<n_learn; r++){
+        this['learn'+(r+1)] = {
+            timeline: [learn_target, feedback],
+            timeline_variables: condition.learn['r'+(r+1)],
+            randomize_order: true
+        }
+    }
+    for(r=0; r<n_learn; r++){     
+        if(r!=(n_learn-1)){
+            this['learn_break'+(r+1)] = {                
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="font-size:20px;">This is the end of round '+(r+1)+'.</br>'+
+                    'You have '+(n_learn-r-1)+' more round(s) to go.</br>'+
+                    'Take a break and press the button to proceed.</br></br></div>',               
+                choices: ['start'],
+                data: {disp_type: 'learn_break'}
+            }
+        } else {
+            this['learn_break'+(r+1)] = {                
+                type: jsPsychHtmlButtonResponse,
+                stimulus: '<div style="font-size:20px;">This is the end of round'+(r+1)+'.</br>'+
+                'Take a break and press the button to move on to the next session.</br></br></div>',                    
+                choices: ['next'],
+                data: {disp_type: 'learn_break'}
+            }
+        }                       
+    }
+
+    // ** post-learn ** //
+    for(r=0; r<n_recon; r++){
+        this['postlearn'+(r+1)] = {
+            timeline: [fixation, recon_target, blank, reconstruction],
+            timeline_variables: condition.postlearn[r],
+            randomize_order: true
+        }
+    }
+
+    // ** debrief ** //
+    var debrief_page = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: function(){                            
+            var html = 
+            '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
+            'Your participation confirmation code is:'+firebase.auth().currentUser.uid+' </br>' +
+            'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
+            '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
+            return html;
+        },
+        choices: "NO_KEYS",        
+        data: {disp_type: 'debrief_page'}            
+    }
+
+    // ** demographic page ** //
+    var gender_options = ['Male', 'Female', 'Other'];
+    var handed_option = ['Right', 'Left', 'ambidextrous'];
+    const demographic_page = {
+        type: jsPsychSurveyHtmlForm,
+        preamble: '<p><b>Before starting, we would like to collect basic information below.</b></p>',
+        html: '<p style="font-size:12pt;"> Gender: '+
+            '<input name="gender" type="radio" value="male"  required/><label for="male">Male</label>'+
+            '<input name="gender" type="radio" value="female"  required/><label for="female">Female</label>'+
+            '<input name="gender" type="radio" value="other"  required/><label for="other">Other</label></br>'+
+            // age
+            'Age: <input name="age" type="text"/></br>'+
+            // handedness
+            'Handedness: '+
+            '<input name="hand" type="radio" value="right"  required/><label for="right">Right</label>'+
+            '<input name="hand" type="radio" value="left"  required/><label for="left">Left</label>'+
+            '<input name="hand" type="radio" value="ambidextrous"  required/><label for="ambidextrous">Ambidextrous</label></br></br>'+
+            'Please respond to the following quetions by checking "Yes" or "No": </br>'+
+            // lenses
+            '</br>Do you wear corrective lenses?: '+
+            '<input name="lense" type="radio" value="yes" required/><label for="yes">Yes</label>'+
+            '<input name="lense" type="radio" value="no" required/><label for="no">No</label>'+
+            '</br>If yes, specify glasses or contacts:  <input name="lensetype" type="text" /></br>'+                
+            // hearing aids
+            '</br>Do you use hearing aid?: '+
+            '<input name="hear" type="radio" value="yes" required/><label for="yes">Yes</label>'+
+            '<input name="hear" type="radio" value="no" required/><label for="no">No</label>'+
+            '</br>If yes, please specify what kinds: <input name="hearaidtype" type="text" /></br>'+
+            // brain malfunction
+            '</br>Do you have any known brain malfunctions?: '+
+            '<input name="brain" type="radio" value="yes" required/><label for="yes">Yes</label>'+
+            '<input name="brain" type="radio" value="no" required/><label for="no">No</label>'+
+            '</br>If yes, please specify type and location: <input name="brainmaltype" type="text" /></br>'+
+            // color blindness
+            '</br>Do you experience color blindness?: '+
+            '<input name="color" type="radio" value="yes" required/><label for="yes">Yes</label>'+
+            '<input name="color" type="radio" value="no" required/><label for="no">No</label></br>'+
+            // neurological conditions
+            '</br>Do you have (or have you had) any neurological conditions?: '+
+            '<input name="neuro" type="radio" value="yes" required/><label for="yes">Yes</label>'+
+            '<input name="neuro" type="radio" value="no" required/><label for="no">No</label>'+
+            '</br>If yes, please specify type and location: <input name="neurotype" type="text" /></br></p>',
+        data: {
+            disp_type: 'demographic_info'
+        }
+    }
+
+    var save_data = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<p>We are saving your data. Do not leave this page.</p>',
+      choices: "NO_KEYS",
+      trial_duration: 3000,
+      data: { // random rotation angle saving                
+          disp_type: 'saving_display'
+      },            
+      on_finish: function(){  
+        // jsPsych.data.displayData() 
+        // send data to firebase!                                 
+        var tmp = new Uint32Array(1);
+        tmp = window.crypto.getRandomValues(tmp)
+        var dbpath = firebase.auth().currentUser.uid+'/'+tmp;
+        firebase.database().ref(dbpath).set({                          
+        data: JSON.parse( JSON.stringify( jsPsych.data.get().values() ) ),                            
+        interaction_data:JSON.parse( JSON.stringify( jsPsych.data.getInteractionData().values() ) ),
+        date: Date()
+        });                          
+      }           
+    }
+
+    timeline=[]  
+    // timeline.push(demographic_page)
+    // timeline.push(preload_inst)
+    // timeline.push(preload_image)
+    // timeline.push(inst_welcome)
+    // timeline.push(inst_prelearn)
+    // timeline.push(recon_practice)
+    // timeline.push(inst_prac2main_recon)
+    // timeline.push(prelearn1)
+    // timeline.push(prelearn2)
+    // timeline.push(prelearn3)
+    // timeline.push(prelearn4)
+    // timeline.push(prelearn5)
+    // timeline.push(prelearn6)
+    // timeline.push(prelearn7)
+    // timeline.push(prelearn8)
+    // timeline.push(inst_learn)
+    // timeline.push(learn1)
+    // timeline.push(learn2)
+    // timeline.push(learn3)
+    // timeline.push(learn4)
+    // timeline.push(learn5)
+    // timeline.push(inst_postlearn)
+    // timeline.push(postlearn1)
+    // timeline.push(postlearn2)
+    // timeline.push(postlearn3)
+    // timeline.push(postlearn4)
+    // timeline.push(postlearn5)
+    // timeline.push(postlearn6)
+    // timeline.push(postlearn7)
+    // timeline.push(postlearn8)
+    // timeline.push(save_data)
+    timeline.push(debrief_page)
+    
+    jsPsych.run(timeline)
+  </script>
+</html>
