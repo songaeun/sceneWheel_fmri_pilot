@@ -325,7 +325,8 @@
             data: JSON.parse( JSON.stringify( jsPsych.data.get().values() ) ),                            
             interaction_data: JSON.parse( JSON.stringify( jsPsych.data.getInteractionData().values() ) ),
             date: Date()
-        });                          
+        });   
+        data.sbjID = firebase.auth().currentUser.uid;                  
       }           
     }
 
@@ -336,7 +337,7 @@
             var sbjID = firebase.auth().currentUser.uid;                           
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is:'+sbjID+' </br>' +
+            'Your participation confirmation code is:'+jsPsych.data.get().last(1).values()[0].sbjID+' </br>' +
             'Please send this code to the researcher via email. Then you can leave this page.</p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
