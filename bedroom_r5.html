@@ -200,8 +200,10 @@
     }
     const inst_prac2main_recon = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: "<p>Practice session is done. Now move on to the main session.</p>",
-        choices: ['start'],
+        stimulus: "<p>Practice session is done. Let's move on to the main session. </br></br>"+
+            "In the main session, you will perform 4 blocks of this task (1 block = 24 trials).</br>"+
+            "There will be 3 interim breaks between blocks.</p>",
+        choices: ['Start'],
         data: {disp_type: 'inst_prac2main_recon'}
     }
 
@@ -272,7 +274,7 @@
         } else {
             this['learn_break'+(r+1)] = {                
                 type: jsPsychHtmlButtonResponse,
-                stimulus: '<div style="font-size:20px;">This is the end of the current session+.</br>'+
+                stimulus: '<div style="font-size:20px;">This is the end of the current session.</br>'+
                 'Take a break and press the button to move on to the next session.</br></br></div>',                    
                 choices: ['next'],
                 data: {disp_type: 'learn_break'}
@@ -293,8 +295,10 @@
     }
     var inst_prac2main_learn = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: "<p>Practice session is done. Now move on to the main session.</p>",
-        choices: ['start'],
+        stimulus: "<p>Practice session is done. Let's move on to the main session.</br></br>"+
+            "In the main session, you will perform "+n_learn+" rounds of this task (1 round = 34 trials).</br>"+
+            "There will be interim breaks between rounds.</p>",
+        choices: ['Start'],
         data: {disp_type: 'inst_prac2main_learn'}
     }
 
@@ -394,7 +398,7 @@
         stimulus: function(){                    
             var html =             
             '<p area-selected="font-size:15px;"> Thank you for participating! </br></br> '+
-            'Your participation confirmation code is: <u>'+jsPsych.data.get().last(2).values()[0].sbjID+'</u> </br>' +
+            'Your participation confirmation code is: <u>'+jsPsych.data.get().last(1).values()[0].sbjID+'</u> </br>' +
             '<b> Please send this code to the researcher via email. </b> </p>'+                          
             '<embed src="stimuli/debrief_letter.pdf" style="width:80vw; height:70vh;"></embed>'
             return html;
@@ -428,7 +432,7 @@
     // timeline.push(prelearn4)   
     timeline.push(recon_break4)
     timeline.push(inst_learn)
-    timeline.push(learn_practice)
+    // timeline.push(learn_practice)
     timeline.push(inst_prac2main_learn)
     // timeline.push(learn1)
     timeline.push(learn_break1)
@@ -438,7 +442,7 @@
     timeline.push(learn_break3)
     // timeline.push(learn4)
     timeline.push(learn_break4)
-    timeline.push(learn5)
+    // timeline.push(learn5)
     timeline.push(learn_break5)
     timeline.push(inst_postlearn)
     // timeline.push(postlearn1)
