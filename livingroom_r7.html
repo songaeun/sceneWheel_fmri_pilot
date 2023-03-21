@@ -44,12 +44,12 @@
 
     // ** EXP parameters ** //
     var wheels = ['bedroom', 'livingroom', 'diningroom']
-    var wheel_path = 'stimuli/'+wheels[0]+'/'
-    var prac_path =  'stimuli/'+wheels[_.sample([1,2])]+'/'
+    var wheel_path = 'stimuli/'+wheels[1]+'/'
+    var prac_path =  'stimuli/'+wheels[_.sample([0,2])]+'/'
     var learn_img = _.range(0,360,10)
     var recon_img = _.range(0,360,30)
     var boundary_start = _.sample(recon_img) 
-    var n_learn = 5
+    var n_learn = 7
     var n_recon = 8 // should be an even number
     var condition = make_condition(learn_img, recon_img, boundary_start, n_learn, n_recon, wheel_path, ".webp")
 
@@ -371,7 +371,7 @@
         },
         choices: ["Agree"],    
         data: {disp_type: "consent"}    
-    }   
+    }  
     // ** debrief question  ** //
     var survey = {
         type: jsPsychSurveyText,
@@ -384,7 +384,7 @@
             {prompt: 'If you have any other feedback about this experiment, please tell us!', name: 'Feedback', rows: 5}
         ],
         data: {disp_type: 'hypothesis_guess'}
-    }    
+    }     
 
     var save_data = {
       type: jsPsychHtmlKeyboardResponse,
@@ -461,6 +461,10 @@
     timeline.push(learn_break4)
     timeline.push(learn5)
     timeline.push(learn_break5)
+    timeline.push(learn6)
+    timeline.push(learn_break6)
+    timeline.push(learn7)
+    timeline.push(learn_break7)
     timeline.push(inst_postlearn)
     timeline.push(postlearn1)
     timeline.push(recon_break1)

@@ -49,7 +49,7 @@
     var learn_img = _.range(0,360,10)
     var recon_img = _.range(0,360,30)
     var boundary_start = _.sample(recon_img) 
-    var n_learn = 5
+    var n_learn = 9
     var n_recon = 8 // should be an even number
     var condition = make_condition(learn_img, recon_img, boundary_start, n_learn, n_recon, wheel_path, ".webp")
 
@@ -371,7 +371,7 @@
         },
         choices: ["Agree"],    
         data: {disp_type: "consent"}    
-    }   
+    }  
     // ** debrief question  ** //
     var survey = {
         type: jsPsychSurveyText,
@@ -384,7 +384,7 @@
             {prompt: 'If you have any other feedback about this experiment, please tell us!', name: 'Feedback', rows: 5}
         ],
         data: {disp_type: 'hypothesis_guess'}
-    }    
+    }     
 
     var save_data = {
       type: jsPsychHtmlKeyboardResponse,
@@ -425,42 +425,50 @@
     }
 
     timeline=[]  
-    timeline.push({
-        type: jsPsychFullscreen,
-        fullscreen_mode: true,
-        delay_after: 0,
-        data: {disp_type: 'fullscreen-in'}
-    });
-    timeline.push(consent)
-    timeline.push(demographic_page)
-    timeline.push(preload_inst) 
-    timeline.push(inst_welcome)
-    timeline.push(inst_prelearn)
-    timeline.push(preload_image_prac)
-    timeline.push(recon_practice)    
-    timeline.push(inst_prac2main_recon)
-    timeline.push(preload_image_main)
-    timeline.push(prelearn1)
-    timeline.push(recon_break1)
-    timeline.push(prelearn2)
-    timeline.push(recon_break2)
-    timeline.push(prelearn3)
-    timeline.push(recon_break3)
-    timeline.push(prelearn4)   
-    timeline.push(recon_break4)
-    timeline.push(inst_learn)
-    timeline.push(learn_practice)
-    timeline.push(inst_prac2main_learn)
-    timeline.push(learn1)
-    timeline.push(learn_break1)
-    timeline.push(learn2)
-    timeline.push(learn_break2)
-    timeline.push(learn3)
-    timeline.push(learn_break3)
-    timeline.push(learn4)
-    timeline.push(learn_break4)
-    timeline.push(learn5)
-    timeline.push(learn_break5)
+    // timeline.push({
+    //     type: jsPsychFullscreen,
+    //     fullscreen_mode: true,
+    //     delay_after: 0,
+    //     data: {disp_type: 'fullscreen-in'}
+    // });
+    // timeline.push(consent)
+    // timeline.push(demographic_page)
+    // timeline.push(preload_inst) 
+    // timeline.push(inst_welcome)
+    // timeline.push(inst_prelearn)
+    // timeline.push(preload_image_prac)
+    // timeline.push(recon_practice)    
+    // timeline.push(inst_prac2main_recon)
+    // timeline.push(preload_image_main)
+    // timeline.push(prelearn1)
+    // timeline.push(recon_break1)
+    // timeline.push(prelearn2)
+    // timeline.push(recon_break2)
+    // timeline.push(prelearn3)
+    // timeline.push(recon_break3)
+    // timeline.push(prelearn4)   
+    // timeline.push(recon_break4)
+    // timeline.push(inst_learn)
+    // timeline.push(learn_practice)
+    // timeline.push(inst_prac2main_learn)
+    // timeline.push(learn1)
+    // timeline.push(learn_break1)
+    // timeline.push(learn2)
+    // timeline.push(learn_break2)
+    // timeline.push(learn3)
+    // timeline.push(learn_break3)
+    // timeline.push(learn4)
+    // timeline.push(learn_break4)
+    // timeline.push(learn5)
+    // timeline.push(learn_break5)
+    // timeline.push(learn6)
+    // timeline.push(learn_break6)
+    // timeline.push(learn7)
+    // timeline.push(learn_break7)
+    // timeline.push(learn8)
+    // timeline.push(learn_break8)
+    timeline.push(learn9)
+    timeline.push(learn_break9)
     timeline.push(inst_postlearn)
     timeline.push(postlearn1)
     timeline.push(recon_break1)
