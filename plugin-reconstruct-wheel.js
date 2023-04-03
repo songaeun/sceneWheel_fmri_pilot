@@ -178,7 +178,9 @@ var jsPsychReconstruct_wheel = (function (jspsych) {
     }
     search_confirm_event(){
       this.search_end = performance.now();
-      document.removeEventListener('mousemove', this.search_event);
+      if(typeof this.angles !== 'undefined'){
+        document.removeEventListener('mousemove', this.search_event);
+      }      
       // change pointer color
       if(this.params.show_indicator==true){        
         var rect = this.recon_arena.getBoundingClientRect();
@@ -254,7 +256,7 @@ var jsPsychReconstruct_wheel = (function (jspsych) {
       angles.rotated_angle_wrap = (angles.rotated_angle + (Math.PI*2)) % (Math.PI*2) // range: 0 ~ 2*pi
       angles.rotated_angle_deg = angles.rotated_angle_wrap/Math.PI * 180; 
       angles.img_angle = Math.floor(angles.rotated_angle_deg/this.params.step_size);       
-      // console.log(angles);
+      console.log(angles);
       return angles;
     }
     draw_pointer(xx, yy, radius, color){
