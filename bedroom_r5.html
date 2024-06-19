@@ -134,7 +134,7 @@
         type: jsPsychImageKeyboardResponse,
         stimulus: jsPsych.timelineVariable('image_name'),
         choices: "NO_KEYS",
-        trial_duration: 200,        
+        trial_duration: 1000,        
         data: {disp_type: 'recon_target'}        
     }
     const reconstruction = {
@@ -199,7 +199,7 @@
             {image_num: 216, image_name: prac_path+"000216.webp", category: ".", repetition: "1"},
             {image_num: 288, image_name: prac_path+"000288.webp", category: ".", repetition: "1"}
         ],
-        randomize_order: true
+        randomize_order: false //true
     }
     const inst_prac2main_recon = {
         type: jsPsychHtmlButtonResponse,
@@ -425,17 +425,17 @@
     }
 
     timeline=[]  
-    timeline.push({
-        type: jsPsychFullscreen,
-        fullscreen_mode: true,
-        delay_after: 0,
-        data: {disp_type: 'fullscreen-in'}
-    });
-    timeline.push(consent)
-    timeline.push(demographic_page)
-    timeline.push(preload_inst) 
-    timeline.push(inst_welcome)
-    timeline.push(inst_prelearn)
+    // timeline.push({
+    //     type: jsPsychFullscreen,
+    //     fullscreen_mode: true,
+    //     delay_after: 0,
+    //     data: {disp_type: 'fullscreen-in'}
+    // });
+    // timeline.push(consent)
+    // timeline.push(demographic_page)
+    // timeline.push(preload_inst) 
+    // timeline.push(inst_welcome)
+    // timeline.push(inst_prelearn)
     timeline.push(preload_image_prac)
     timeline.push(recon_practice)    
     timeline.push(inst_prac2main_recon)

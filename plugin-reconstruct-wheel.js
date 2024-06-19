@@ -127,7 +127,7 @@ var jsPsychReconstruct_wheel = (function (jspsych) {
       if(this.params.random_circle_rotation == true){  // set random rotation angle
         this.wsp = Math.random()*Math.PI; // should be in radian range      
       }    
-      // console.log(this.wsp/Math.PI*180)
+      console.log(this.wsp/Math.PI*180)
       var initial_param = this.params.starting_value; // initial starting_value
       this.init_display(initial_param);
       this.setup_event_listeners();
@@ -256,7 +256,7 @@ var jsPsychReconstruct_wheel = (function (jspsych) {
       angles.rotated_angle_wrap = (angles.rotated_angle + (Math.PI*2)) % (Math.PI*2) // range: 0 ~ 2*pi
       angles.rotated_angle_deg = angles.rotated_angle_wrap/Math.PI * 180; 
       angles.img_angle = Math.floor(angles.rotated_angle_deg/this.params.step_size);       
-      // console.log(angles);
+      console.log(angles);
       return angles;
     }
     draw_pointer(xx, yy, radius, color){
